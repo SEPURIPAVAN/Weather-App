@@ -8,14 +8,14 @@ export default function SearchBox({updateInfo}){
     let[error,setError]=useState(false);
 
     const API_URL="https://api.openweathermap.org/data/2.5/weather"
-    const API_KEY="6176d260fdbf05a4d83fbe22ca9dbf75";
+    const API_KEY=import.meta.env.VITE_API_KEY;
 
     let getWeatherInfo=async ()=>{
         try {
             let res = await fetch(`${API_URL}?q=${city}&appid=${API_KEY}&units=metric`);
             let jsonRes = await res.json();
             console.log(jsonRes);
-            if (!res.ok || !jsonRes.main || !jsonRes.weather) {
+            if (jsonRes.cod && jsonRes.cod !== 200) {
                 setError(true);
                 return null;
             }
@@ -32,6 +32,7 @@ export default function SearchBox({updateInfo}){
             console.log(result);
             return result;
         } catch (err) {
+            console.error("Error:", err);
             setError(true);
             return null;
         }
